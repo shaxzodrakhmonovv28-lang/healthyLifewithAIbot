@@ -198,10 +198,8 @@ __pycache__/
 
 ## 🤝 Hissa qo'shish
 
-Pull request va issue lar xush kelibsiz!
 
 ---
 
 ## 📄 Litsenziya
 
-MIT License — erkin foydalaning.
