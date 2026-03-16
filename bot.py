@@ -289,7 +289,7 @@ def build_image(day_name: str, day_data: dict, first_name: str) -> io.BytesIO:
         draw.rounded_rectangle([14, y, W - 14, y + 42], radius=6, fill="#1a1500", outline=GOLD, width=1)
         draw.text((26, y + 13), f"💡  {tip}", font=f_sm, fill=GOLD)
 
-    draw.text((W // 2, H - 18), "🤖 Student Life Planner Bot  •  Groq AI", font=f_xs, fill=GRY, anchor="mm")
+    draw.text((W // 2, H - 18), "🤖 By Shakhzod, font=f_xs, fill=GRY, anchor="mm")
 
     buf = io.BytesIO()
     img.save(buf, "PNG")
