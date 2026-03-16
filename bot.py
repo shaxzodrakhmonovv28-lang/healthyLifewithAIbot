@@ -39,6 +39,12 @@ log = logging.getLogger("planner")
     S_ALLERGY_Q, S_ALLERGY_TXT,
 ) = range(10)
 
+
+# ═══════════════════════════════════════════════
+#  USER DATABASE (JSON fayl)
+#  Har bir user chat_id bo'yicha saqlanadi.
+#  CHAT_ID hardcode emas — har kim o'z datasi.
+# ═══════════════════════════════════════════════
 def _load() -> dict:
     if Path(USERS_FILE).exists():
         with open(USERS_FILE, "r", encoding="utf-8") as f:
@@ -67,6 +73,10 @@ def clear_user(chat_id):
     _save(db)
 
 
+# ═══════════════════════════════════════════════
+#  HUGGINGFACE ROUTER API  (bepul, ishlaydi)
+#  Model: DeepSeek-V3.2 via Novita
+# ═══════════════════════════════════════════════
 HF_URL   = "https://router.huggingface.co/v1/chat/completions"
 HF_MODEL = "deepseek-ai/DeepSeek-V3-0324:novita"
 
@@ -116,6 +126,9 @@ async def groq_vision(img_bytes: bytes, prompt: str) -> str:
         return r.json()["choices"][0]["message"]["content"]
 
 
+# ═══════════════════════════════════════════════
+#  AI HAFTALIK TARTIB GENERATORI
+# ═══════════════════════════════════════════════
 async def make_plan(user: dict) -> dict:
     status = user.get("status", "studying")
     if status == "working":
@@ -196,6 +209,9 @@ Barcha 7 kunni to'liq to'ldir. Allergiyasiz mahsulotlar ishlat. Byudjetga mos ov
     return json.loads(raw)
 
 
+# ═══════════════════════════════════════════════
+#  RASM GENERATORI (Pillow)
+# ═══════════════════════════════════════════════
 def _font(path: str, size: int):
     try:
         return ImageFont.truetype(path, size)
@@ -273,7 +289,7 @@ def build_image(day_name: str, day_data: dict, first_name: str) -> io.BytesIO:
         draw.rounded_rectangle([14, y, W - 14, y + 42], radius=6, fill="#1a1500", outline=GOLD, width=1)
         draw.text((26, y + 13), f"💡  {tip}", font=f_sm, fill=GOLD)
 
-    draw.text((W // 2, H - 18), "🤖 By Shakhzod, font=f_xs, fill=GRY, anchor="mm")
+    draw.text((W // 2, H - 18), "🤖 By Shakhzod", font=f_xs, fill=GRY, anchor="mm")
 
     buf = io.BytesIO()
     img.save(buf, "PNG")
