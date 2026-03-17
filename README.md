@@ -85,8 +85,8 @@ brew install tesseract tesseract-lang
 1. Telegramda [@BotFather](https://t.me/BotFather) ga yozing
 2. `/newbot` → nom bering → token oling
 
-**Groq API Key** (bepul, Rossiyada ishlaydi):
-1. [console.groq.com](https://console.groq.com) ga kiring (Google bilan)
+**Hugging face(DeepSeek v2) ** 
+1. [[console.groq.com](https://console.groq.com](https://huggingface.co/settings/tokens)) ga kiring
 2. **API Keys** → **Create API Key** → nusxalang
 
 ### 5. Sozlash
