@@ -150,7 +150,7 @@ student-life-planner-bot/
 2. **New Project** → **Deploy from GitHub repo**
 3. Environment variables qo'shing:
    - `BOT_TOKEN` = tokeningiz
-   - `GROQ_API_KEY` = Groq keyingiz
+   - `HF_TOKEN` = Hugging face keyingiz
 4. Start command: `python bot.py`
 
 ### VPS (Linux systemd)
