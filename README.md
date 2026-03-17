@@ -1,7 +1,7 @@
 # 🤖 Life Planner Bot
 
 > Telegram bot — har bir foydalanuvchiga shaxsiy haftalik tartib tuzib beradi.  
-> Groq AI (bepul) + Pytesseract OCR + Pillow rasm generatsiyasi.
+>  Model: DeepSeek-V3.2 via Novita + Pytesseract OCR + Pillow rasm generatsiyasi.
 
 ---
 
