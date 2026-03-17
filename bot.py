@@ -349,7 +349,7 @@ async def cmd_start(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
 
     await update.message.reply_text(
         f"👋 Salom, *{u.first_name}*!\n\n"
-        "🤖 Men *Student Life Planner Bot*man!\n\n"
+        "🤖 Men *Healthy Life Planner Bot*man!\n\n"
         "📋 *Nima qila olaman:*\n"
         "• Sizga mos 1 haftalik tartib tuzaman 🗓\n"
         "• Har kuni ertalab tartibni rasmda yuboran 🖼\n"
