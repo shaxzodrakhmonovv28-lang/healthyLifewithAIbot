@@ -39,12 +39,6 @@ log = logging.getLogger("planner")
     S_ALLERGY_Q, S_ALLERGY_TXT,
 ) = range(10)
 
-
-# ═══════════════════════════════════════════════
-#  USER DATABASE (JSON fayl)
-#  Har bir user chat_id bo'yicha saqlanadi.
-#  CHAT_ID hardcode emas — har kim o'z datasi.
-# ═══════════════════════════════════════════════
 def _load() -> dict:
     if Path(USERS_FILE).exists():
         with open(USERS_FILE, "r", encoding="utf-8") as f:
@@ -74,9 +68,9 @@ def clear_user(chat_id):
 
 
 # ═══════════════════════════════════════════════
-#  HUGGINGFACE ROUTER API  (bepul, ishlaydi)
+#  HUGGINGFACE ROUTER API
 #  Model: DeepSeek-V3.2 via Novita
-# ═══════════════════════════════════════════════
+
 HF_URL   = "https://router.huggingface.co/v1/chat/completions"
 HF_MODEL = "deepseek-ai/DeepSeek-V3-0324:novita"
 
@@ -125,10 +119,6 @@ async def groq_vision(img_bytes: bytes, prompt: str) -> str:
         r.raise_for_status()
         return r.json()["choices"][0]["message"]["content"]
 
-
-# ═══════════════════════════════════════════════
-#  AI HAFTALIK TARTIB GENERATORI
-# ═══════════════════════════════════════════════
 async def make_plan(user: dict) -> dict:
     status = user.get("status", "studying")
     if status == "working":
@@ -209,9 +199,6 @@ Barcha 7 kunni to'liq to'ldir. Allergiyasiz mahsulotlar ishlat. Byudjetga mos ov
     return json.loads(raw)
 
 
-# ═══════════════════════════════════════════════
-#  RASM GENERATORI (Pillow)
-# ═══════════════════════════════════════════════
 def _font(path: str, size: int):
     try:
         return ImageFont.truetype(path, size)
@@ -230,7 +217,6 @@ def build_image(day_name: str, day_data: dict, first_name: str) -> io.BytesIO:
     img  = Image.new("RGB", (W, H), BG)
     draw = ImageDraw.Draw(img)
 
-    # Header gradient
     for i in range(90):
         v = int(40 + 160 * (1 - i / 90))
         draw.rectangle([0, i, W, i + 1], fill=(v // 3, 0, v))
@@ -244,7 +230,6 @@ def build_image(day_name: str, day_data: dict, first_name: str) -> io.BytesIO:
 
     y = 98
 
-    # ── JADVAL ───────────────────────────────
     draw.text((24, y), "⏱  KUNLIK JADVAL", font=f_lg, fill=GOLD)
     y += 32
     for item in day_data.get("schedule", [])[:10]:
@@ -257,8 +242,6 @@ def build_image(day_name: str, day_data: dict, first_name: str) -> io.BytesIO:
             draw.text((W - 75, y + 9), f"{dur} min",             font=f_xs, fill=GRY)
         y += 40
     y += 8
-
-    # ── OVQATLAR ─────────────────────────────
     draw.text((24, y), "🍽  OVQATLAR", font=f_lg, fill=GRN)
     y += 32
     for key, label, icon in [
@@ -278,7 +261,6 @@ def build_image(day_name: str, day_data: dict, first_name: str) -> io.BytesIO:
         y += 62
     y += 8
 
-    # ── MOTIVATSIYA ───────────────────────────
     mot = day_data.get("motivation", "")
     tip = day_data.get("tip", "")
     if mot:
@@ -297,9 +279,6 @@ def build_image(day_name: str, day_data: dict, first_name: str) -> io.BytesIO:
     return buf
 
 
-# ═══════════════════════════════════════════════
-#  SCHEDULER — har user uchun alohida
-# ═══════════════════════════════════════════════
 UZ_DAYS = ["Dushanba","Seshanba","Chorshanba","Payshanba","Juma","Shanba","Yakshanba"]
 
 def today_uz() -> str:
@@ -344,10 +323,6 @@ def register_reminder(scheduler: AsyncIOScheduler, app: Application,
     )
     log.info(f"Reminder set for chat_id={chat_id} at {h:02d}:{m:02d}")
 
-
-# ═══════════════════════════════════════════════
-#  KEYBOARD HELPERS
-# ═══════════════════════════════════════════════
 def kb(*rows):
     return InlineKeyboardMarkup(
         [[InlineKeyboardButton(t, callback_data=d) for t, d in row] for row in rows]
@@ -360,9 +335,6 @@ MAIN_MENU = kb(
 )
 
 
-# ═══════════════════════════════════════════════
-#  /start HANDLER
-# ═══════════════════════════════════════════════
 async def cmd_start(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
     u = update.effective_user
     cid = update.effective_chat.id
@@ -391,9 +363,6 @@ async def cmd_start(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
     return ConversationHandler.END
 
 
-# ═══════════════════════════════════════════════
-#  ONBOARDING CONVERSATION
-# ═══════════════════════════════════════════════
 
 async def cb_begin(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
     q = update.callback_query; await q.answer()
@@ -578,9 +547,6 @@ async def recv_allergy(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
     return ConversationHandler.END
 
 
-# ═══════════════════════════════════════════════
-#  PLAN GENERATION + SEND
-# ═══════════════════════════════════════════════
 async def _process(cid: int, ctx: ContextTypes.DEFAULT_TYPE):
     try:
         user = get_user(cid)
@@ -623,9 +589,6 @@ async def _process(cid: int, ctx: ContextTypes.DEFAULT_TYPE):
         )
 
 
-# ═══════════════════════════════════════════════
-#  MENU CALLBACK HANDLERS
-# ═══════════════════════════════════════════════
 async def cb_today(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
     q = update.callback_query; await q.answer()
     cid  = q.message.chat_id
@@ -721,9 +684,6 @@ async def cb_back_menu(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
     await q.edit_message_text("Nima qilishni xohlaysiz?", reply_markup=MAIN_MENU)
 
 
-# ═══════════════════════════════════════════════
-#  MAIN
-# ═══════════════════════════════════════════════
 async def post_init(app: Application):
     """Bot ishga tushganda scheduler ni ham ishga tushir."""
     scheduler = AsyncIOScheduler(timezone=TZ)
