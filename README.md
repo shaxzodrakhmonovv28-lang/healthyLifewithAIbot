@@ -1,4 +1,4 @@
-# 🤖 Student Life Planner Bot
+# 🤖 Life Planner Bot
 
 > Telegram bot — har bir foydalanuvchiga shaxsiy haftalik tartib tuzib beradi.  
 > Groq AI (bepul) + Pytesseract OCR + Pillow rasm generatsiyasi.
